@@ -29,10 +29,10 @@ module ActiveModel
 
         serializable = serializer ? serializer.new(item, @options) : item
 
-        if serializable.respond_to?(:serializable_hash)
-          serializable.serializable_hash
-        else
+        if @options[:element_root] || !serializable.respond_to?(:serializable_hash)
           serializable.as_json
+        else
+          serializable.serializable_hash
         end
       end
     end

@@ -52,4 +52,32 @@ class ArraySerializerTest < ActiveModel::TestCase
     ], serializer.as_json)
   end
 
+  def test_array_serializer_with_element_root
+    comment1 = Comment.new(:title => "Comment1", :id => 1)
+    comment2 = Comment.new(:title => "Comment2", :id => 2)
+
+    array = [ comment1, comment2 ]
+
+    serializer = array.active_model_serializer.new(array, :element_root => true)
+
+    assert_equal([
+      { :comment => { :title => "Comment1" }},
+      { :comment => { :title => "Comment2" }}
+    ], serializer.as_json)
+  end
+
+  def test_array_serializer_with_root_and_element_root
+    comment1 = Comment.new(:title => "Comment1", :id => 1)
+    comment2 = Comment.new(:title => "Comment2", :id => 2)
+
+    array = [ comment1, comment2 ]
+
+    serializer = array.active_model_serializer.new(array, :element_root => true, :root => :comments)
+
+    assert_equal({ :comments => [
+      { :comment => { :title => "Comment1" }},
+      { :comment => { :title => "Comment2" }}
+    ]}, serializer.as_json)
+  end
+
 end

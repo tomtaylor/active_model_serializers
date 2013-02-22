@@ -307,6 +307,22 @@ class AssociationTest < ActiveModel::TestCase
 
       assert_equal 1, serialized_times
     end
+
+    def test_element_root_for_has_many_associations
+      @post_serializer_class.class_eval do
+        has_many :comments, :element_root => true
+      end
+
+      include_bare! :comments, :element_root => true
+
+      assert_equal({
+        :comments => [
+          { :comment => 
+            { :id => 1, :body => "ZOMG A COMMENT" }
+          }
+        ]
+      }, @hash)
+    end
   end
 
   class InclusionTest < AssociationTest
